@@ -6,6 +6,7 @@ import nltk
 corpus = []
 translation = []
 dictionary = {}
+pos_dictionary{}
 test_set = [0,1,2,3,4]
 
 _digits = re.compile('\d')
@@ -96,13 +97,14 @@ def main():
     tagged = nltk.pos_tag(tokens)
     for  tag in tagged:
       dict_string = tag[1] + " " +  tag[0] + '\n'
-      f.write(dict_string) 
-      print dict_string
+      f.write(dict_string)
+      pos_dictionary[tag[0]] = tag[1] 
 
     print 
     print
 
   f.close()
+  print pos_dictionary
 
 if __name__ == "__main__":
     main()
