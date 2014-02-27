@@ -5,6 +5,7 @@ import re
 corpus = []
 translation = []
 dictionary = {}
+# random selection of test sentences
 test_set = [0,1,2,3,4]
 
 _digits = re.compile('\d')
