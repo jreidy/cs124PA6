@@ -6,6 +6,7 @@ import nltk
 corpus = []
 translation = []
 dictionary = {}
+pos_dictionary={}
 test_set = [0,1,2,3,4]
 
 _digits = re.compile('\d')
@@ -79,7 +80,15 @@ def main():
   create_dictionary()
   create_corpus()
   translate()
+
   i = 0
+
+  
+  f = open('POS_dict','w')
+  #f.write('hi there\n') # python will convert \n to os.linesep
+   # you can omit in most cases as the destructor will call if
+  
+
   for sentence in translation:
     print sentence
     print ""
@@ -92,11 +101,16 @@ def main():
     #nltk.download('maxent_treebank_pos_tagger');
     tokens = nltk.word_tokenize(sentence)
     tagged = nltk.pos_tag(tokens)
-    print tagged
+    for  tag in tagged:
+      dict_string = tag[1] + " " +  tag[0] + '\n'
+      f.write(dict_string)
+      pos_dictionary[tag[0]] = tag[1] 
 
     print 
     print
 
+  f.close()
+  print pos_dictionary
 
 if __name__ == "__main__":
     main()
