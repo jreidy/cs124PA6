@@ -1,6 +1,7 @@
 
 import codecs
 import re
+import nltk
 
 corpus = []
 translation = []
@@ -82,6 +83,18 @@ def main():
   for sentence in translation:
     print sentence
     print ""
+
+    print 'nltk'
+
+    #run once
+    # nltk.download('maxent_treebank_pos_tagger');
+    tokens = nltk.word_tokenize(sentence)
+    tagged = nltk.pos_tag(tokens)
+    print tagged
+
+    print 
+    print
+
 
 if __name__ == "__main__":
     main()
