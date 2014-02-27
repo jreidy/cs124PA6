@@ -5,6 +5,9 @@ import nltk
 
 corpus = []
 translation = []
+
+tree_dict = {}
+
 dictionary = {}
 pos_dictionary={}
 test_set = [0,1,2,3,4]
@@ -76,10 +79,27 @@ def create_corpus():
     line = line.lower()
     corpus.append(line)
     
+def create_tree_dict():
+  file = codecs.open("tagfile.txt", 'r', encoding='utf-8')
+  print 'function called'
+  while 1:
+    line = file.readline()
+    split_line = line.split()
+    if split_line and len(split_line) == 3:
+      tree_dict[split_line[0].replace("'","")] = [split_line[1],split_line[2]]
+
+    if not line:
+      break
+    line = line.lower()
+    corpus.append(line)
+
+  print tree_dict
+
 def main():
   create_dictionary()
   create_corpus()
   translate()
+  create_tree_dict()
 
   i = 0
 
@@ -90,12 +110,12 @@ def main():
   
 
   for sentence in translation:
-    print sentence
-    print ""
-    print corpus[i]
+    # print sentence
+    # print ""
+    # print corpus[i]
     i += 1
-    print ""
-    print 'nltk'
+    # print ""
+    # print 'nltk'
 
     #run once
     #nltk.download('maxent_treebank_pos_tagger');
