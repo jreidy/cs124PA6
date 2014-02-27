@@ -61,7 +61,7 @@ Buona Great
 dibattito debate
 stato state
 molto very
-accesso on
+acceso on
 punto point
 che that
 gli the
@@ -101,7 +101,8 @@ dalla from
 stessa itself
 legge law
 Bray Bray
-L’operazione the_opperation
+L the
+operazione opperation
 darà give
 la the
 possibilità possibility
@@ -147,7 +148,8 @@ elicotteri helicopters
 e and 
 aerei airline 
 immergendosi immersing
-sott’acqua underwater
+sott under
+acqua water
 dell of
 isola island 
 del of 
@@ -196,7 +198,7 @@ un an
 arte art 
 chiara clear
 netta net 
-senza senza 
+senza without 
 retorica rhetoric
 che that
 non not
@@ -284,7 +286,6 @@ prova test
 recitazione acting
 dell of
 attore actor
-guatemalteco Guatemala
 Oscar Oscar
 Isaac Isaac
 in in
@@ -310,7 +311,7 @@ fermatevi stop
 pure also
 a at
 questa this
-trattoria restaurant
+trattoria tavern
 volta time 
 uscirete you_will_exit
 sazi full

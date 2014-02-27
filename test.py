@@ -1,7 +1,5 @@
-# import sys
-# import getopt
-# import os
-# import math
+
+import codecs
 import re
 
 corpus = []
@@ -9,62 +7,80 @@ translation = []
 dictionary = {}
 test_set = [0,1,2,3,4]
 
-# guardando looking
-# vuoto empty
+_digits = re.compile('\d')
+def contains_digits(d):
+  return bool(_digits.search(d))
+
+_punctuation = re.compile('[\.\:\!\,]')
+def contains_punctuation(d):
+  return bool(_punctuation.search(d))
+
+_underscore = re.compile('_')
+def contains_underscore(d):
+  return bool(_underscore.search(d))
 
 def translate():
 
-  line_pattern = "([\w']+)"
-
   for sentence in corpus:
     translated_sentence = ""
-    split_sentence = re.findall(line_pattern, sentence)
-    print split_sentence
-    for word in split_sentence:
-      translated_sentence = translated_sentence + dictionary[word]
+    list_sentence = sentence.split()
+
+    for word in list_sentence:
+      # check for punctuation and add if found at end
+      punctuation = ""
+      if contains_punctuation(word):
+        punctuation = word[-1:]
+        word = word[:-1]
+      # split on apostrophe
+      if "'" in word:
+        list_word = word.split("'")
+        for cur_word in list_word:
+          translated_sentence += " " + dictionary[cur_word]
+      # if digits just append
+      elif contains_digits(word):
+        translated_sentence += " " + word
+      # default lookup case
+      else:
+        english_word = dictionary[word]
+        if contains_underscore(english_word):
+          english_word = english_word.replace("_", " ")
+        translated_sentence += " " + english_word
+      # punctuation is usually empty
+      translated_sentence += punctuation
+
     translation.append(translated_sentence)
 
 def create_dictionary():
-  file = open("dictionary.txt")
 
-  line_pattern = '([\w\_\']+)\s([\w\_\']+)'
+  file = codecs.open("dictionary.txt", 'r', encoding='utf-8')
   
-  repeats = 0
   while 1:
       line = file.readline()
       if not line:
         break
       line = line.lower()
-      line_matches = re.findall(line_pattern, line)
-      for match in line_matches:
-        check_exist = dictionary.get(match[0], " ")
-        if check_exist != " ":
-          repeats = repeats + 1
-        dictionary[match[0]] = match[1]
+      list_pair = line.split()
+      dictionary[list_pair[0]] = list_pair[1]
 
-  # print len(dictionary)
-  # print repeats
   return dictionary
 
 def create_corpus():
-  file = open("corpus.txt")
-
-  line_pattern = '(.+)'
+  file = codecs.open("corpus.txt", 'r', encoding='utf-8')
 
   while 1:
     line = file.readline()
     if not line:
       break
     line = line.lower()
-    line_matches = re.findall(line_pattern, line)
-    for match in line_matches:
-      corpus.append(match)
+    corpus.append(line)
     
 def main():
   create_dictionary()
   create_corpus()
   translate()
-  print translation
+  for sentence in translation:
+    print sentence
+    print ""
 
 if __name__ == "__main__":
     main()
