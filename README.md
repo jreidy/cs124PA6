@@ -1,3 +1,3 @@
 CS124 PA6
 
-Noam is a coward.
+Jack is a coward.
