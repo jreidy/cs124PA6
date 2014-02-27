@@ -79,6 +79,11 @@ def main():
   create_dictionary()
   create_corpus()
   translate()
+  
+  f = open('POS_dict','w')
+  #f.write('hi there\n') # python will convert \n to os.linesep
+   # you can omit in most cases as the destructor will call if
+  
   for sentence in translation:
     print sentence
     print ""
@@ -89,11 +94,15 @@ def main():
     # nltk.download('maxent_treebank_pos_tagger');
     tokens = nltk.word_tokenize(sentence)
     tagged = nltk.pos_tag(tokens)
-    print tagged
+    for  tag in tagged:
+      dict_string = tag[1] + " " +  tag[0] + '\n'
+      f.write(dict_string) 
+      print dict_string
 
     print 
     print
 
+  f.close()
 
 if __name__ == "__main__":
     main()
