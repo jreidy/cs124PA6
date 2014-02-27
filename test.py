@@ -92,8 +92,8 @@ def main():
     tagged = nltk.pos_tag(tokens)
     print tagged
 
-    print 
-    print
+    print ""
+    print ""
 
 
 if __name__ == "__main__":
