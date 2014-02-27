@@ -6,7 +6,7 @@ import nltk
 corpus = []
 translation = []
 dictionary = {}
-pos_dictionary{}
+pos_dictionary={}
 test_set = [0,1,2,3,4]
 
 _digits = re.compile('\d')
