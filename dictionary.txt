@@ -121,7 +121,7 @@ ai to
 nostri our
 occhi eyes
 le the
-imagini imagery
+immagini imagery
 che that
 ha has
 scattato tripped 
@@ -391,7 +391,10 @@ ripresa recovery
 percussione percussion
 centrale central
 difesa defense
+scogliera cliff
 del of
-Napoli Naples 
+Napoli Naples
 salva save
 affanno breathlessness
+guardando looking
+vuoto empty

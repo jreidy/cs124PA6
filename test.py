@@ -4,12 +4,31 @@
 # import math
 import re
 
+corpus = []
+translation = []
+dictionary = {}
+test_set = [0,1,2,3,4]
+
+# guardando looking
+# vuoto empty
+
+def translate():
+
+  line_pattern = "([\w']+)"
+
+  for sentence in corpus:
+    translated_sentence = ""
+    split_sentence = re.findall(line_pattern, sentence)
+    print split_sentence
+    for word in split_sentence:
+      translated_sentence = translated_sentence + dictionary[word]
+    translation.append(translated_sentence)
+
 def create_dictionary():
   file = open("dictionary.txt")
 
   line_pattern = '([\w\_\']+)\s([\w\_\']+)'
-  dictionary = {}
-
+  
   repeats = 0
   while 1:
       line = file.readline()
@@ -31,7 +50,6 @@ def create_corpus():
   file = open("corpus.txt")
 
   line_pattern = '(.+)'
-  corpus = []
 
   while 1:
     line = file.readline()
@@ -41,13 +59,12 @@ def create_corpus():
     line_matches = re.findall(line_pattern, line)
     for match in line_matches:
       corpus.append(match)
-
-  return corpus
     
 def main():
-  dictionary = create_dictionary()
-  corpus = create_corpus()
-
+  create_dictionary()
+  create_corpus()
+  translate()
+  print translation
 
 if __name__ == "__main__":
     main()
