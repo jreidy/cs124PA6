@@ -345,7 +345,7 @@ sempre always
 parleranno speak
 male bad
 di of
-te to
+te you
 e and
 sarà will
 difficile difficult
