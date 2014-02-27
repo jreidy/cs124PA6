@@ -2,12 +2,15 @@
 import codecs
 import re
 import nltk
+import copy
 
 # list of italian sentences
 corpus = []
 # list of translations
 translation = []
 # dictionary of terms mapping italian -> english
+tree_dict = {}
+
 dictionary = {}
 # english part of speech 
 pos_dictionary={}
@@ -39,22 +42,26 @@ def apply_adjective_noun_strategy(sentence):
       continue
     if pos_dictionary[first_word] == "NN" and pos_dictionary[second_word] == "JJ":
       flipping_indexes.append(i)
-  return_sentence = sentence
+  # manipulate sentence accordingly
   for index in flipping_indexes:
-    temp_word = return_sentence[index]
-    return_sentence[index] = return_sentence[index+1]
-    return_sentence[index+1] = temp_word
-
-  return return_sentence
+    temp_word = sentence[index]
+    sentence[index] = sentence[index+1]
+    sentence[index+1] = temp_word
 
 def apply_processing_strategies():
   index = 1
   processed_sentences = []
   for sentence in translation_split:
     print index
+    
     index += 1
-    working_sentence = sentence
-    working_sentence = apply_adjective_noun_strategy(working_sentence)
+    # we must copy the list and it's objects (deep)
+    working_sentence = copy.deepcopy(sentence)
+
+    apply_adjective_noun_strategy(working_sentence)
+
+    print sentence
+    print working_sentence
     processed_sentences.append(working_sentence)
 
 def create_english_pos():
@@ -141,12 +148,29 @@ def create_corpus():
     line = line.lower()
     corpus.append(line)
     
+def create_tree_dict():
+  file = codecs.open("tagfile.txt", 'r', encoding='utf-8')
+  print 'function called'
+  while 1:
+    line = file.readline()
+    split_line = line.split()
+    if split_line and len(split_line) == 3:
+      tree_dict[split_line[0].replace("'","")] = [split_line[1],split_line[2]]
+
+    if not line:
+      break
+    line = line.lower()
+    corpus.append(line)
+
+  print tree_dict
+
 def main():
   create_dictionary()
   create_corpus()
   translate()
   create_english_pos()
   apply_processing_strategies()
+  create_tree_dict()
 
 if __name__ == "__main__":
     main()
