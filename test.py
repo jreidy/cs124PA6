@@ -79,14 +79,17 @@ def main():
   create_dictionary()
   create_corpus()
   translate()
+  i = 0
   for sentence in translation:
     print sentence
     print ""
-
+    print corpus[i]
+    i += 1
+    print ""
     print 'nltk'
 
     #run once
-    # nltk.download('maxent_treebank_pos_tagger');
+    #nltk.download('maxent_treebank_pos_tagger');
     tokens = nltk.word_tokenize(sentence)
     tagged = nltk.pos_tag(tokens)
     print tagged
