@@ -160,7 +160,6 @@ def create_tree_dict():
     if not line:
       break
     line = line.lower()
-    corpus.append(line)
 
   print tree_dict
 
