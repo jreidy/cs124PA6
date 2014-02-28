@@ -19,8 +19,6 @@ sentence_split = []
 
 translation_split = []
 
-test_set_indices = [0,1,2,3,4]
-
 _digits = re.compile('\d')
 def contains_digits(d):
   return bool(_digits.search(d))
@@ -32,6 +30,32 @@ def contains_punctuation(d):
 _underscore = re.compile('_')
 def contains_underscore(d):
   return bool(_underscore.search(d))
+
+def apply_not_strategy(sentence):
+  flipping_indexes = []
+  for i in range(0, len(sentence)-1):
+    if sentence[i] == 'not':
+      flipping_indexes.append(i)
+  for index in flipping_indexes:
+    new_word = ""
+    next_word = pos_dictionary[sentence[index+1]]
+    if next_word == "VB":
+      new_word = "do_"
+    elif next_word == "VBD":
+      new_word = "do_"
+    elif next_word == "VBZ":
+      new_word = "does_"
+    elif next_word == "VBG":
+      # gerund should not change
+      new_word = ""
+    elif next_word == "VBN":
+      new_word = ""
+    elif next_word == "VBP":
+      new_word = "does_"
+    else:
+      new_word = ""
+
+    sentence[index] = new_word + 'not'
 
 def apply_adjective_noun_strategy(sentence):
   # list of indexes that need to be flipped after iteration over sentence
@@ -60,6 +84,7 @@ def apply_post_processing_strategies():
     working_sentence = copy.deepcopy(sentence)
 
     apply_adjective_noun_strategy(working_sentence)
+    apply_not_strategy(working_sentence)
     print working_sentence
     processed_english_sentences.append(working_sentence)
 
