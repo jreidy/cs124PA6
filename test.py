@@ -77,13 +77,28 @@ def apply_adjective_noun_strategy(sentence):
     sentence[index] = sentence[index+1]
     sentence[index+1] = temp_word
 
-def apply_verb_tensing(sentence):
-  for word in sentence:
-    if contains_punctuation(word) or contains_digits(word) or contains_underscore(word):
-      continue
+def apply_verb_tensing_and_plurality(sentence):
+  changed_verbs = []
+  for i in range(0, len(sentence) - 1):
+    word = sentence[i]
     if verb_tenses.get(word, "") != "":
-      print "we have a tensed verb" 
-      print verb_tenses.get(word, "")
+      verb_lemma_list = verb_tenses.get(word, "")
+      italian_word = reverse_dictionary[word]
+      italian_pos = tree_dict[italian_word][0]
+      new_verb = word
+      if italian_pos == "ver:fin" or italian_pos == "ver:infi" or italian_pos ==  "ver:infi:cli" or italian_pos == "ver2:fin" or italian_pos == "aux:infi":
+        new_verb = verb_lemma_list[0]
+      elif italian_pos == "":
+        new_verb = verb_lemma_list[1]
+      elif italian_pos == "ver:ppast":
+        new_verb = verb_lemma_list[2]
+      elif italian_pos == "ver:geru" or italian_pos == "ver:greu:cli" or italian_pos == "ver:aux:greu":
+        new_verb = verb_lemma_list[3]
+      changed_verbs.append(new_verb)
+    else:
+      changed_verbs.append(word)
+  for i in range(0, len(sentence) - 1):
+    sentence[i] = changed_verbs[i]
 
 def apply_post_processing_strategies():
   index = 1
@@ -93,10 +108,10 @@ def apply_post_processing_strategies():
     index += 1
     # we must copy the list and it's objects (deep)
     working_sentence = copy.deepcopy(sentence)
-    apply_verb_tensing(sentence)
     apply_adjective_noun_strategy(working_sentence)
     apply_not_strategy(working_sentence)
-    # print working_sentence
+    apply_verb_tensing_and_plurality(working_sentence)
+    print working_sentence
     processed_english_sentences.append(working_sentence)
 
 def apply_adverb_verb_strategy(sentence):
