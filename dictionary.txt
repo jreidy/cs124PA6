@@ -8,10 +8,10 @@ anno year
 fa ago 
 dai from
 due two
-proprietari owners
+proprietari owner
 provenienti from
 da from
-mondi worlds
+mondi world
 diversi different
 ma but
 con with
@@ -27,9 +27,9 @@ qui here
 nome name
 oscar oscar
 chef chef
-passeggiando walking
+passeggiando walk
 le the
-vie streets
+vie street
 del of
 centro center
 appena just
