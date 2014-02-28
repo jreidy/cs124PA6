@@ -82,7 +82,7 @@ def create_english_pos():
     print tokens
     tagged = nltk.pos_tag(tokens)
     for  tag in tagged:
-      dict_string = tag[1] + " " +  tag[0] + ' '
+      dict_string =  tag[0] + '[ ' + tag[1] + ' ]' + ' '
       f.write(dict_string)
       pos_dictionary[tag[0]] = tag[1]
 
