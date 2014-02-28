@@ -1,4 +1,3 @@
-
 import codecs
 import re
 import nltk
@@ -61,7 +60,6 @@ def apply_post_processing_strategies():
     working_sentence = copy.deepcopy(sentence)
 
     apply_adjective_noun_strategy(working_sentence)
-    print sentence
     print working_sentence
     processed_english_sentences.append(working_sentence)
 
@@ -79,6 +77,7 @@ def apply_adverb_verb_strategy(sentence):
     if pos_1 != "" and pos_2 != "":
       if "ver" in pos_1[0] and pos_2[0] == "adv":
         flipping_indexes.append(i)
+        print first_word
   # manipulate sentence accordingly
   for index in flipping_indexes:
     temp_word = sentence[index]
@@ -89,6 +88,7 @@ def apply_pre_processing_strategies():
   index = 1
   processed_sentence_split = []
   for sentence in sentence_split:
+    print index
     index += 1
 
     working_sentence = copy.deepcopy(sentence)
@@ -173,6 +173,18 @@ def create_corpus():
       break
     line = line.lower()
     corpus.append(line)
+    
+def create_tree_dict():
+  file = codecs.open("tagfile.txt", 'r', encoding='utf-8')
+  while 1:
+    line = file.readline()
+    if not line:
+      break
+    line = line.lower()
+    split_line = line.split()
+    if split_line and len(split_line) == 3:
+      tree_dict[split_line[0].replace("'","")] = [split_line[1],split_line[2]]
+
 
 def create_english_pos():
   
@@ -186,29 +198,20 @@ def create_english_pos():
     tokens = nltk.word_tokenize(sentence)
     tagged = nltk.pos_tag(tokens)
     for  tag in tagged:
-      dict_string = tag[1] + " " +  tag[0] + '\n'
+      dict_string =  tag[0] + '[ ' + tag[1] + ' ]' + ' '
       f.write(dict_string)
       pos_dictionary[tag[0]] = tag[1]
 
+    f.write('\n')
+
   f.close()
-    
-def create_tree_dict():
-  file = codecs.open("tagfile.txt", 'r', encoding='utf-8')
-  while 1:
-    line = file.readline()
-    if not line:
-      break
-    line = line.lower()
-    split_line = line.split()
-    if split_line and len(split_line) == 3:
-      tree_dict[split_line[0].replace("'","")] = [split_line[1],split_line[2]]
 
 def main():
   create_dictionary()
   create_corpus()
   split_italian()
   create_tree_dict()
-  # apply_pre_processing_strategies()
+  apply_pre_processing_strategies()
   translate_from_split()
   create_english_pos()
   apply_post_processing_strategies()
