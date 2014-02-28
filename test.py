@@ -11,8 +11,11 @@ translation = []
 tree_dict = {}
 
 dictionary = {}
+reverse_dictionary = {}
 # english part of speech 
-pos_dictionary={}
+pos_dictionary = {}
+
+verb_tenses = {}
 
 # italian split
 sentence_split = []
@@ -74,18 +77,26 @@ def apply_adjective_noun_strategy(sentence):
     sentence[index] = sentence[index+1]
     sentence[index+1] = temp_word
 
+def apply_verb_tensing(sentence):
+  for word in sentence:
+    if contains_punctuation(word) or contains_digits(word) or contains_underscore(word):
+      continue
+    if verb_tenses.get(word, "") != "":
+      print "we have a tensed verb" 
+      print verb_tenses.get(word, "")
+
 def apply_post_processing_strategies():
   index = 1
   processed_english_sentences = []
   for sentence in translation_split:
-    print index
+    # print index
     index += 1
     # we must copy the list and it's objects (deep)
     working_sentence = copy.deepcopy(sentence)
-
+    apply_verb_tensing(sentence)
     apply_adjective_noun_strategy(working_sentence)
     apply_not_strategy(working_sentence)
-    print working_sentence
+    # print working_sentence
     processed_english_sentences.append(working_sentence)
 
 def apply_adverb_verb_strategy(sentence):
@@ -102,7 +113,7 @@ def apply_adverb_verb_strategy(sentence):
     if pos_1 != "" and pos_2 != "":
       if "ver" in pos_1[0] and pos_2[0] == "adv":
         flipping_indexes.append(i)
-        print first_word
+        # print first_word
   # manipulate sentence accordingly
   for index in flipping_indexes:
     temp_word = sentence[index]
@@ -113,7 +124,7 @@ def apply_pre_processing_strategies():
   index = 1
   processed_sentence_split = []
   for sentence in sentence_split:
-    print index
+    # print index
     index += 1
 
     working_sentence = copy.deepcopy(sentence)
@@ -166,7 +177,6 @@ def translate_from_split():
         translated_sentence += word
       else:
         english_word = dictionary[word][0]
-        print english_word
         if contains_underscore(english_word):
           english_word = english_word.replace("_", " ")
         translated_sentence += " " + english_word
@@ -191,6 +201,8 @@ def create_dictionary():
       for word in translated_words:
         new_word_list.append(word)
       dictionary[list_pair[0]] = new_word_list
+      for english_word in new_word_list:
+        reverse_dictionary[english_word] = list_pair[0]
 
   return dictionary
 
@@ -216,6 +228,20 @@ def create_tree_dict():
       tree_dict[split_line[0].replace("'","")] = [split_line[1],split_line[2]]
 
 
+def create_verb_tenses():
+  file = open('verb_tenses.txt')
+  while 1:
+    line = file.readline()
+    if not line:
+      break
+    line = line.lower()
+    split_line = line.split()
+    conjugations_split = split_line[1].split(",")
+    conjugations = []
+    for conjugation in conjugations_split:
+      conjugations.append(conjugation)
+    verb_tenses[split_line[0]] = conjugations
+
 def create_english_pos():
   
   f = open('POS_dict','w')
@@ -239,6 +265,7 @@ def create_english_pos():
 def main():
   create_dictionary()
   create_corpus()
+  create_verb_tenses()
   split_italian()
   create_tree_dict()
   apply_pre_processing_strategies()
