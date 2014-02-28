@@ -79,11 +79,14 @@ def create_english_pos():
     #run once
     #nltk.download('maxent_treebank_pos_tagger');
     tokens = nltk.word_tokenize(sentence)
+    print tokens
     tagged = nltk.pos_tag(tokens)
     for  tag in tagged:
-      dict_string = tag[1] + " " +  tag[0] + '\n'
+      dict_string = tag[1] + " " +  tag[0] + ' '
       f.write(dict_string)
       pos_dictionary[tag[0]] = tag[1]
+
+    f.write('\n')
 
   f.close()
   print pos_dictionary
@@ -177,12 +180,13 @@ def create_tree_dict():
     if not line:
       break
     line = line.lower()
-
-  print tree_dict
-
     split_line = line.split()
     if split_line and len(split_line) == 3:
       tree_dict[split_line[0].replace("'","")] = [split_line[1],split_line[2]]
+
+  print tree_dict
+
+  
 
 def main():
   create_dictionary()
