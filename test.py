@@ -45,7 +45,6 @@ def apply_adjective_noun_strategy(sentence):
       continue
     if (pos_dictionary[first_word] == "NN" or pos_dictionary[first_word] == "NNS" ) and pos_dictionary[second_word] == "JJ":
       flipping_indexes.append(i)
-      print first_word
   # manipulate sentence accordingly
   for index in flipping_indexes:
     temp_word = sentence[index]
@@ -54,10 +53,9 @@ def apply_adjective_noun_strategy(sentence):
 
 def apply_post_processing_strategies():
   index = 1
-  processed_sentences = []
+  processed_english_sentences = []
   for sentence in translation_split:
     print index
-    
     index += 1
     # we must copy the list and it's objects (deep)
     working_sentence = copy.deepcopy(sentence)
@@ -65,34 +63,40 @@ def apply_post_processing_strategies():
     apply_adjective_noun_strategy(working_sentence)
     print sentence
     print working_sentence
-    processed_sentences.append(working_sentence)
+    processed_english_sentences.append(working_sentence)
 
-
-
-def create_english_pos():
-  
-  f = open('POS_dict','w')
-  #f.write('hi there\n') # python will convert \n to os.linesep
-  # you can omit in most cases as the destructor will call if
-
-  for sentence in translation:
-    #run once
-    #nltk.download('maxent_treebank_pos_tagger');
-    tokens = nltk.word_tokenize(sentence)
-    tagged = nltk.pos_tag(tokens)
-    for  tag in tagged:
-      dict_string = tag[1] + " " +  tag[0] + '\n'
-      f.write(dict_string)
-      pos_dictionary[tag[0]] = tag[1]
-
-  f.close()
-  print pos_dictionary
+def apply_adverb_verb_strategy(sentence):
+    # list of indexes that need to be flipped after iteration over sentence
+  flipping_indexes = []
+  # compare word pairs- end w/ penultimate index
+  for i in range(0, len(sentence)-2):
+    first_word = sentence[i]
+    second_word = sentence[i+1]
+    if contains_punctuation(first_word) or contains_punctuation(second_word) or contains_digits(first_word) or contains_digits(second_word):
+      continue
+    pos_1 = tree_dict.get(first_word, "")
+    pos_2 = tree_dict.get(second_word, "")
+    if pos_1 != "" and pos_2 != "":
+      if "ver" in pos_1[0] and pos_2[0] == "adv":
+        flipping_indexes.append(i)
+  # manipulate sentence accordingly
+  for index in flipping_indexes:
+    temp_word = sentence[index]
+    sentence[index] = sentence[index+1]
+    sentence[index+1] = temp_word
 
 def apply_pre_processing_strategies():
+  index = 1
+  processed_sentence_split = []
   for sentence in sentence_split:
-    # print sentence
-    # print "*********"
-    pass
+    index += 1
+
+    working_sentence = copy.deepcopy(sentence)
+    apply_adverb_verb_strategy(working_sentence)
+    processed_sentence_split.append(working_sentence)
+
+  for i in range(0, len(processed_sentence_split)):
+    sentence_split[i] = processed_sentence_split[i]
 
 def split_italian():
   for sentence in corpus:
@@ -169,6 +173,24 @@ def create_corpus():
       break
     line = line.lower()
     corpus.append(line)
+
+def create_english_pos():
+  
+  f = open('POS_dict','w')
+  #f.write('hi there\n') # python will convert \n to os.linesep
+  # you can omit in most cases as the destructor will call if
+
+  for sentence in translation:
+    #run once
+    #nltk.download('maxent_treebank_pos_tagger');
+    tokens = nltk.word_tokenize(sentence)
+    tagged = nltk.pos_tag(tokens)
+    for  tag in tagged:
+      dict_string = tag[1] + " " +  tag[0] + '\n'
+      f.write(dict_string)
+      pos_dictionary[tag[0]] = tag[1]
+
+  f.close()
     
 def create_tree_dict():
   file = codecs.open("tagfile.txt", 'r', encoding='utf-8')
@@ -185,12 +207,11 @@ def main():
   create_dictionary()
   create_corpus()
   split_italian()
-  apply_pre_processing_strategies()
+  create_tree_dict()
+  # apply_pre_processing_strategies()
   translate_from_split()
-  # translate()
   create_english_pos()
   apply_post_processing_strategies()
-  create_tree_dict()
 
 if __name__ == "__main__":
     main()
