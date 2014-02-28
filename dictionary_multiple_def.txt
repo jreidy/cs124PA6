@@ -91,6 +91,7 @@ teatro theater,stage
 eventualità event,possibility,eventuality,contingency
 prevista expected
 dalla from
+dal from 
 stessa itself
 legge law
 Bray Bray
@@ -114,10 +115,15 @@ scorrono flow,slide,run
 davanti front,in_front,ahead,opposite
 ai to
 nostri our
+Napoli Naples
 occhi eyes
+una a
+dopo after
 le the,a,an
 immagini imagery
 che that,than,what,as,whether
+nell in
+nella in
 ha have,get,be,own
 scattato tripped,take,click,snap,go_off 
 durante during,in,over,for,through,pending 
@@ -130,6 +136,7 @@ da from,by,to,for,since
 un a,an
 porto port,harbor
 all all,to
+o or
 altro other,another,more,else
 volando fly,soar
 su on,on_top_of,up 

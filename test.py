@@ -165,7 +165,8 @@ def translate_from_split():
         translated_sentence_list.append(word)
         translated_sentence += word
       else:
-        english_word = dictionary[word]
+        english_word = dictionary[word][0]
+        print english_word
         if contains_underscore(english_word):
           english_word = english_word.replace("_", " ")
         translated_sentence += " " + english_word
@@ -177,7 +178,7 @@ def translate_from_split():
 
 def create_dictionary():
 
-  file = codecs.open("dictionary.txt", 'r', encoding='utf-8')
+  file = codecs.open("dictionary_multiple_def.txt", 'r', encoding='utf-8')
   
   while 1:
       line = file.readline()
@@ -185,7 +186,11 @@ def create_dictionary():
         break
       line = line.lower()
       list_pair = line.split()
-      dictionary[list_pair[0]] = list_pair[1]
+      new_word_list = []
+      translated_words = list_pair[1].split(",")
+      for word in translated_words:
+        new_word_list.append(word)
+      dictionary[list_pair[0]] = new_word_list
 
   return dictionary
 
