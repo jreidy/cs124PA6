@@ -15,6 +15,9 @@ dictionary = {}
 # english part of speech 
 pos_dictionary={}
 
+# italian split
+sentence_split = []
+
 translation_split = []
 
 test_set_indices = [0,1,2,3,4]
@@ -40,15 +43,16 @@ def apply_adjective_noun_strategy(sentence):
     second_word = sentence[i+1]
     if contains_punctuation(first_word) or contains_punctuation(second_word) or contains_digits(first_word) or contains_digits(second_word):
       continue
-    if pos_dictionary[first_word] == "NN" and pos_dictionary[second_word] == "JJ":
+    if (pos_dictionary[first_word] == "NN" or pos_dictionary[first_word] == "NNS" ) and pos_dictionary[second_word] == "JJ":
       flipping_indexes.append(i)
+      print first_word
   # manipulate sentence accordingly
   for index in flipping_indexes:
     temp_word = sentence[index]
     sentence[index] = sentence[index+1]
     sentence[index+1] = temp_word
 
-def apply_processing_strategies():
+def apply_post_processing_strategies():
   index = 1
   processed_sentences = []
   for sentence in translation_split:
@@ -59,10 +63,11 @@ def apply_processing_strategies():
     working_sentence = copy.deepcopy(sentence)
 
     apply_adjective_noun_strategy(working_sentence)
-
     print sentence
     print working_sentence
     processed_sentences.append(working_sentence)
+
+
 
 def create_english_pos():
   
@@ -81,14 +86,19 @@ def create_english_pos():
       pos_dictionary[tag[0]] = tag[1]
 
   f.close()
+  print pos_dictionary
 
-def translate():
+def apply_pre_processing_strategies():
+  for sentence in sentence_split:
+    # print sentence
+    # print "*********"
+    pass
 
+def split_italian():
   for sentence in corpus:
-    translated_sentence = ""
     list_sentence = sentence.split()
 
-    translated_sentence_list = []
+    italian_sentence_list = []
     for word in list_sentence:
       # check for punctuation and add if found at end
       has_punctuation = False
@@ -101,13 +111,30 @@ def translate():
       if "'" in word:
         list_word = word.split("'")
         for cur_word in list_word:
-          translated_sentence += " " + dictionary[cur_word]
-          translated_sentence_list.append(dictionary[cur_word])
+          italian_sentence_list.append(cur_word)
       # if digits just append
       elif contains_digits(word):
-        translated_sentence += " " + word
-        translated_sentence_list.append(word)
+        italian_sentence_list.append(word)
       # default lookup case
+      else:
+        italian_sentence_list.append(word)
+      # punctuation is usually empty
+      if has_punctuation:
+        italian_sentence_list.append(punctuation)
+
+    sentence_split.append(italian_sentence_list)
+
+def translate_from_split():
+  for sentence in sentence_split:
+    translated_sentence_list = []
+    translated_sentence = ""
+    for word in sentence:
+      if contains_digits(word):
+        translated_sentence_list.append(word)
+        translated_sentence += " " + word
+      elif contains_punctuation(word):
+        translated_sentence_list.append(word)
+        translated_sentence += word
       else:
         english_word = dictionary[word]
         if contains_underscore(english_word):
@@ -116,13 +143,8 @@ def translate():
         split_english_word = english_word.split()
         for split_word in split_english_word:
           translated_sentence_list.append(split_word)
-      # punctuation is usually empty
-      translated_sentence += punctuation
-      if has_punctuation:
-        translated_sentence_list.append(punctuation)
-
-    translation.append(translated_sentence)
     translation_split.append(translated_sentence_list)
+    translation.append(translated_sentence)
 
 def create_dictionary():
 
@@ -150,25 +172,27 @@ def create_corpus():
     
 def create_tree_dict():
   file = codecs.open("tagfile.txt", 'r', encoding='utf-8')
-  print 'function called'
   while 1:
     line = file.readline()
-    split_line = line.split()
-    if split_line and len(split_line) == 3:
-      tree_dict[split_line[0].replace("'","")] = [split_line[1],split_line[2]]
-
     if not line:
       break
     line = line.lower()
 
   print tree_dict
 
+    split_line = line.split()
+    if split_line and len(split_line) == 3:
+      tree_dict[split_line[0].replace("'","")] = [split_line[1],split_line[2]]
+
 def main():
   create_dictionary()
   create_corpus()
-  translate()
+  split_italian()
+  apply_pre_processing_strategies()
+  translate_from_split()
+  # translate()
   create_english_pos()
-  apply_processing_strategies()
+  apply_post_processing_strategies()
   create_tree_dict()
 
 if __name__ == "__main__":
